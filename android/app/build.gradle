@@ -1,0 +1,56 @@
+// ============================================================================
+// ANDROID APP BUILD.GRADLE - GOOGLE ADMOB & DEPENDÊNCIAS DO TRILHA DO SABER
+// ============================================================================
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    namespace "com.trilhadosaber.app"
+    compileSdkVersion 34
+
+    defaultConfig {
+        applicationId "com.trilhadosaber.app"
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.webkit:webkit:1.12.0'
+
+    // ========================================================================
+    // [REQUISITO 1] GOOGLE MOBILE ADS SDK (VERSÃO ATUAL E COMPATÍVEL)
+    // Documentação: https://developers.google.com/admob/android/quick-start
+    // ========================================================================
+    implementation 'com.google.android.gms:play-services-ads:23.6.0'
+}
