@@ -17,16 +17,21 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Preparar Android SDK
-        run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
 
-      - name: Preparar Gradle
+      - name: Preparar Gradle Wrapper
         working-directory: android
         run: |
           chmod +x gradlew
-          gradle wrapper --gradle-version 8.5
+
+          if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
+            curl -L \
+              -o gradle/wrapper/gradle-wrapper.jar \
+              https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar
+          fi
 
       - name: Gerar APK
         working-directory: android
