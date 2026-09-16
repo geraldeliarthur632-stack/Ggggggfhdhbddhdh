@@ -1,20 +1,38 @@
-- name: Preparar Android SDK
-  run: |
-    yes | sdkmanager --licenses
-    sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+name: Gerar APK
 
-          yes | sdkmanager --licenses
-      - name: Configurar Gradle
-        uses: gradle/actions/setup-gradle@v4
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar projeto
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
         with:
-          gradle-version: '8.5'
+          distribution: temurin
+          java-version: '17'
+
+      - name: Preparar Android SDK
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Preparar Gradle
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          gradle wrapper --gradle-version 8.5
 
       - name: Gerar APK
         working-directory: android
         run: |
-          gradle wrapper --gradle-version 8.5
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
       - name: Disponibilizar APK
         uses: actions/upload-artifact@v4
